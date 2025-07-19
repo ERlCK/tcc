@@ -50,7 +50,6 @@ def get_spotify_playlist_items(playlist_id):
         for item in data["items"]:
             name = item["track"]["name"]
             songs.append(name)
-            print(len(songs))
             
         if data["next"] is None:
             break
@@ -61,4 +60,4 @@ def get_spotify_playlist_items(playlist_id):
 
 token = get_token()
 songs = get_spotify_playlist_items("6s5qmXJ05wFkZS2GIioXaR")
-print(songs)
+#print(songs)
