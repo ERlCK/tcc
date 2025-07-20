@@ -42,10 +42,15 @@ def getting_letodie_songs_links(letodie_links):
     return songs_links #ex: 'https://www.letras.mus.br/letodie/memento-mori/'
 
 def getting_songs_lyrics():
-    lyrick_link_web = requests.get(songs_links[0]).content
-    soup_lyric_link = BeautifulSoup(lyrick_link_web, 'html.parser')
-    songs_lyrics = soup_lyric_link.find(class_='lyric-original')
-    return songs_lyrics
+    for i in range(len(songs_links)):
+        lyrick_link_web = requests.get(songs_links[i]).content
+        soup_lyric_link = BeautifulSoup(lyrick_link_web, 'html.parser')
+        songs_lyrics = soup_lyric_link.find(class_='lyric-original')
+        final_lyrics = fixing_songs_lyrics(songs_lyrics)
+        with open(f"Lyrics/{songs[i]}.txt", "w", encoding="utf-8") as t:
+            t.write(final_lyrics)
+        print(f"Writing {songs[i]}")
+    return final_lyrics
 
 def fixing_songs_lyrics(songs_lyrics):
     final_lyrics = str(songs_lyrics)
@@ -53,11 +58,10 @@ def fixing_songs_lyrics(songs_lyrics):
     final_lyrics = final_lyrics.replace("<p>", "\n")
     final_lyrics = final_lyrics.replace("</p>","")
     final_lyrics = final_lyrics.replace("<br/>","\n")
+    final_lyrics = final_lyrics.replace("</div>", "")
     return final_lyrics
 
 fixing_music_names()
 letodie_links = getting_all_letodie_links()
 songs_links = getting_letodie_songs_links(letodie_links)
-songs_lyrics = getting_songs_lyrics()
-final_lyrics = fixing_songs_lyrics(songs_lyrics)
-print(final_lyrics)
+final_lyrics = getting_songs_lyrics()
